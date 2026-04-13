@@ -4,6 +4,8 @@ import cv2
 import numpy as np
 from torchvision import transforms
 from PIL import Image
+import os
+import gdown
 
 from dct.dct_transform import extract_dct_features
 from models.spatial_cnn import SpatialCNN
@@ -25,6 +27,18 @@ DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 # -------------------------------
+# Model Download (IMPORTANT 🔥)
+# -------------------------------
+MODEL_PATH = "saved_models/spectranet.pth"
+
+if not os.path.exists(MODEL_PATH):
+    os.makedirs("saved_models", exist_ok=True)
+    url = "https://drive.google.com/uc?id=1Tl2ss5TZAMsowPQVyG-pIcWHixPiduLr"
+    with st.spinner("Downloading model... please wait ⏳"):
+        gdown.download(url, MODEL_PATH, quiet=False)
+
+
+# -------------------------------
 # Load Model
 # -------------------------------
 @st.cache_resource
@@ -34,7 +48,7 @@ def load_model():
     model = SpectraNet(spatial, spectral).to(DEVICE)
 
     model.load_state_dict(
-        torch.load("saved_models/spectranet.pth", map_location=DEVICE)
+        torch.load(MODEL_PATH, map_location=DEVICE)
     )
     model.eval()
     return model
