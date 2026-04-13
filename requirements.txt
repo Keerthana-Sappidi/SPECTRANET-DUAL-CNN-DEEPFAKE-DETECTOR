@@ -1,0 +1,7 @@
+torch
+torchvision
+torchaudio
+opencv-python-headless
+numpy
+scikit-learn
+streamlit
